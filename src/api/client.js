@@ -1,18 +1,18 @@
-/**
- * Sanos y Salvos — API Client
+﻿/**
+ * Sanos y Salvos â€” API Client
  * HTTP client with JWT interceptor for authenticated requests.
  */
 
 import axios from 'axios';
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 const api = axios.create({
   baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Request interceptor — attach JWT
+// Request interceptor â€” attach JWT
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('access_token');
   if (token) {
@@ -21,7 +21,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor — handle 401
+// Response interceptor â€” handle 401
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -88,3 +88,4 @@ export const notificationsAPI = {
 };
 
 export default api;
+
