@@ -41,9 +41,8 @@ body {
   color: var(--text-primary);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  background-image: radial-gradient(var(--text-muted) 1px, transparent 1px);
-  background-size: 24px 24px;
-  background-position: -12px -12px;
+  background-image: linear-gradient(180deg, #f7f6f2 0%, var(--bg-primary) 38%, #efeee9 100%);
+  background-attachment: fixed;
 }
 
 h1, h2, h3, h4, h5, h6, .display-font {
@@ -63,11 +62,6 @@ a {
 @keyframes slideUpFade {
   0% { opacity: 0; transform: translateY(40px); }
   100% { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
 }
 
 .animate-in {
@@ -168,28 +162,6 @@ a {
 
 @media (max-width: 600px) {
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-}
-
-/* Decorative */
-.marquee-container {
-  overflow: hidden;
-  white-space: nowrap;
-  background: var(--text-primary);
-  color: var(--bg-primary);
-  padding: 12px 0;
-  border-top: var(--border-thick);
-  border-bottom: var(--border-thick);
-  display: flex;
-}
-
-.marquee-content {
-  display: flex;
-  gap: 40px;
-  animation: marquee 20s linear infinite;
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 1.5rem;
 }
 
 .badge {

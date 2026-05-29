@@ -12,41 +12,21 @@ export default function Home() {
 
   return (
     <div style={{ paddingBottom: '100px' }}>
-      {/* Marquee Banner */}
-      <div className="marquee-container">
-        <div className="marquee-content">
-          <span>ALERTA MASCOTAS PERDIDAS</span>
-          <span>•</span>
-          <span>SISTEMA DE MATCH EN TIEMPO REAL</span>
-          <span>•</span>
-          <span>REPORTE INMEDIATO</span>
-          <span>•</span>
-          <span>ALERTA MASCOTAS PERDIDAS</span>
-          <span>•</span>
-          <span>SISTEMA DE MATCH EN TIEMPO REAL</span>
-          <span>•</span>
-          <span>REPORTE INMEDIATO</span>
-        </div>
-      </div>
 
       {/* Hero Section */}
       <section style={{ 
-        minHeight: '85vh', 
+        minHeight: '70vh', 
         display: 'flex', 
         alignItems: 'center',
         position: 'relative',
-        padding: '80px 0',
+        padding: '56px 0',
         borderBottom: 'var(--border-thick)'
       }}>
         <div className="container">
-          <div className="grid-2" style={{ alignItems: 'center' }}>
+          <div style={{ maxWidth: '860px' }}>
             
             {/* Left Content */}
             <div className="animate-in">
-              <div className="badge" style={{ marginBottom: '24px', background: 'var(--accent-green)' }}>
-                PLATAFORMA ACTIVA
-              </div>
-              
               <h1 className="display-font" style={{ 
                 fontSize: 'clamp(3rem, 7vw, 6rem)', 
                 lineHeight: 0.9,
@@ -74,29 +54,6 @@ export default function Home() {
                 <Link to="/map" className="brutal-btn">
                   <MapPin size={20} strokeWidth={3} /> EXPLORAR ZONAS
                 </Link>
-              </div>
-            </div>
-
-            {/* Right Content - Hero Image */}
-            <div className="animate-in delay-2" style={{ position: 'relative', height: '100%', minHeight: '500px' }}>
-              <div style={{ 
-                position: 'absolute', 
-                top: '5%', right: '5%', 
-                width: '90%', height: '90%', 
-                background: 'var(--accent-orange)',
-                border: 'var(--border-thick)',
-                transform: 'rotate(3deg)'
-              }} />
-              <div style={{ 
-                position: 'absolute', 
-                top: '10%', right: '10%', 
-                width: '90%', height: '90%', 
-                border: 'var(--border-thick)',
-                transform: 'rotate(-2deg)',
-                overflow: 'hidden',
-                background: 'white'
-              }}>
-                <img src="/hero-pets.png" alt="Sanos y Salvos" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
             </div>
 
