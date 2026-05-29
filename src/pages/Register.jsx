@@ -1,5 +1,5 @@
-﻿import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { PawPrint, UserPlus } from 'lucide-react';
 
@@ -10,7 +10,8 @@ export default function Register() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const { register, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const redirectTo = location.state?.from || '/';
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
@@ -19,7 +20,7 @@ export default function Register() {
     setLoading(true);
     try {
       await register(form);
-      navigate('/');
+      navigate(redirectTo, { replace: true });
     } catch (err) {
       const code = err?.code || '';
       if (code === 'auth/email-already-in-use') {
@@ -49,7 +50,7 @@ export default function Register() {
     setGoogleLoading(true);
     try {
       await loginWithGoogle();
-      navigate('/');
+      navigate(redirectTo, { replace: true });
     } catch (err) {
       const code = err?.code || '';
       if (code === 'auth/popup-closed-by-user') {
@@ -135,7 +136,7 @@ export default function Register() {
         </button>
 
         <div style={{ textAlign: 'center', marginTop: '30px', fontWeight: 600 }}>
-          Ya tienes cuenta? <Link to="/login" style={{ color: 'var(--accent-blue)', textDecoration: 'underline' }}>Inicia sesion</Link>
+          Ya tienes cuenta? <Link to="/login" state={{ from: redirectTo }} style={{ color: 'var(--accent-blue)', textDecoration: 'underline' }}>Inicia sesion</Link>
         </div>
       </div>
     </div>

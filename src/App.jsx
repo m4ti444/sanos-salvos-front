@@ -3,7 +3,7 @@
  * Root component with routing.
  */
 
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
@@ -17,16 +17,17 @@ import Matches from './pages/Matches';
 import { useAuth } from './context/AuthContext';
 import { showToast } from './utils/toast';
 
-function RequireAuth({ children }) {
+function RequireAuth({ children, message = 'Debes iniciar sesion para continuar.' }) {
   const { user, loading } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!loading && !user) {
-      showToast('Debes iniciar sesion para ver las coincidencias.', 'warning');
-      navigate('/login', { replace: true });
+      showToast(message, 'warning');
+      navigate('/login', { replace: true, state: { from: location.pathname } });
     }
-  }, [loading, user, navigate]);
+  }, [loading, user, navigate, location.pathname, message]);
 
   if (loading || !user) return null;
   return children;
@@ -42,9 +43,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/report" element={<ReportPet />} />
+          <Route path="/report" element={<RequireAuth message="Debes iniciar sesion o registrarte para crear un reporte."><ReportPet /></RequireAuth>} />
           <Route path="/map" element={<MapView />} />
-          <Route path="/matches" element={<RequireAuth><Matches /></RequireAuth>} />
+          <Route path="/matches" element={<Matches />} />
         </Routes>
       </main>
       <Footer />

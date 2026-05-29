@@ -30,9 +30,30 @@ export default function ToastHost() {
   }, []);
 
   return (
-    <div className="toast-stack">
+    <div style={{
+      position: 'fixed',
+      top: 96,
+      right: 24,
+      zIndex: 100,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10,
+      maxWidth: 'min(360px, calc(100vw - 32px))'
+    }}>
       {toasts.map((toast) => (
-        <div key={toast.id} className={`toast-item ${toast.type}`}>
+        <div
+          key={toast.id}
+          style={{
+            background: toast.type === 'warning' ? 'var(--accent-orange)' : 'white',
+            color: toast.type === 'warning' ? 'white' : 'var(--text-primary)',
+            border: 'var(--border-thick)',
+            boxShadow: '6px 6px 0 var(--text-primary)',
+            padding: '14px 16px',
+            fontWeight: 800,
+            textTransform: 'uppercase',
+            lineHeight: 1.25
+          }}
+        >
           {toast.message}
         </div>
       ))}

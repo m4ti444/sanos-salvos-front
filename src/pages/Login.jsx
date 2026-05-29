@@ -1,5 +1,5 @@
-﻿import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { PawPrint, LogIn } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -11,7 +11,8 @@ export default function Login() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const redirectTo = location.state?.from || '/';
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -20,7 +21,7 @@ export default function Login() {
     try {
       const success = await login(email, password);
       if (success) {
-        navigate('/');
+        navigate(redirectTo, { replace: true });
       } else {
         setError('Credenciales invalidas');
       }
@@ -41,7 +42,7 @@ export default function Login() {
     setGoogleLoading(true);
     try {
       await loginWithGoogle();
-      navigate('/');
+      navigate(redirectTo, { replace: true });
     } catch (err) {
       const code = err?.code || '';
       if (code === 'auth/popup-closed-by-user') {
@@ -118,7 +119,7 @@ export default function Login() {
         </button>
 
         <div style={{ textAlign: 'center', marginTop: '30px', fontWeight: 600 }}>
-          No tienes cuenta? <Link to="/register" style={{ color: 'var(--accent-blue)', textDecoration: 'underline' }}>Registrate</Link>
+          No tienes cuenta? <Link to="/register" state={{ from: redirectTo }} style={{ color: 'var(--accent-blue)', textDecoration: 'underline' }}>Registrate</Link>
         </div>
       </div>
     </div>
