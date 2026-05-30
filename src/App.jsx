@@ -45,7 +45,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/report" element={<RequireAuth message="Debes iniciar sesion o registrarte para crear un reporte."><ReportPet /></RequireAuth>} />
           <Route path="/map" element={<MapView />} />
-          <Route path="/matches" element={<Matches />} />
+          <Route path="/matches" element={<RequireAuth message="Debes iniciar sesion para ver las coincidencias."><Matches /></RequireAuth>} />
         </Routes>
       </main>
       <Footer />
