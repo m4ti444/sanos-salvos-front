@@ -19,7 +19,7 @@ const hasRequiredConfig = [
 
 if (!hasRequiredConfig) {
   throw new Error(
-    'Firebase config missing. Define VITE_FIREBASE_API_KEY, VITE_FIREBASE_AUTH_DOMAIN, VITE_FIREBASE_PROJECT_ID and VITE_FIREBASE_APP_ID in frontend .env'
+    'Firebase config missing. Define VITE_FIREBASE_API_KEY, VITE_FIREBASE_AUTH_DOMAIN, VITE_FIREBASE_PROJECT_ID and VITE_FIREBASE_APP_ID before building the frontend.'
   );
 }
 
