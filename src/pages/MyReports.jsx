@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, Loader, MapPin, PawPrint, Plus } from 'lucide-react';
+import { FileText, Loader, MapPin, PawPrint, Plus, Trash2 } from 'lucide-react';
 import { petsAPI } from '../api/client';
 import { showToast } from '../utils/toast';
 
@@ -21,7 +21,7 @@ function formatDate(value) {
   });
 }
 
-function ReportCard({ report }) {
+function ReportCard({ report, onDelete }) {
   const pet = report.pet || {};
   const typeLabel = report.report_type === 'perdido' ? 'Perdido' : 'Encontrado';
 
@@ -52,6 +52,12 @@ function ReportCard({ report }) {
           <FileText size={16} /> Fecha del evento: {formatDate(report.date_event)}
         </p>
       </div>
+
+      <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+        <button onClick={() => onDelete(report.id)} className="brutal-btn" style={{ background: '#ef4444', color: 'white', padding: '8px 16px', display: 'flex', gap: '8px', alignItems: 'center', borderColor: '#b91c1c' }}>
+          <Trash2 size={16} /> Borrar
+        </button>
+      </div>
     </div>
   );
 }
@@ -79,6 +85,18 @@ export default function MyReports() {
 
     loadReports();
   }, []);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('¿Estas seguro de borrar este reporte?')) return;
+    try {
+      await petsAPI.deleteReport(id);
+      setReports((prev) => prev.filter((r) => r.id !== id));
+      setSummary((prev) => ({ ...prev, total: Math.max(0, prev.total - 1) }));
+      showToast('Reporte borrado exitosamente.', 'success');
+    } catch {
+      showToast('No se pudo borrar el reporte.', 'error');
+    }
+  };
 
   return (
     <div className="page">
@@ -127,7 +145,7 @@ export default function MyReports() {
         ) : (
           <div style={{ display: 'grid', gap: '16px' }}>
             {reports.map((report) => (
-              <ReportCard key={report.id} report={report} />
+              <ReportCard key={report.id} report={report} onDelete={handleDelete} />
             ))}
           </div>
         )}
