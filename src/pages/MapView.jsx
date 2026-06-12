@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+﻿import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -19,6 +19,13 @@ const foundIcon = new L.DivIcon({
   iconSize: [36, 36], className: '',
 });
 
+const titleText = (value, fallback = '-') => {
+  if (!value) return fallback;
+  return value
+    .toLocaleLowerCase('es-CL')
+    .replace(/(^|\s|-|')([a-záéíóúüñ])/g, (match, prefix, char) => `${prefix}${char.toLocaleUpperCase('es-CL')}`);
+};
+
 function normalizeReport(raw, index) {
   const lat = Number(raw.lat ?? raw.latitude);
   const lng = Number(raw.lng ?? raw.longitude);
@@ -30,6 +37,10 @@ function normalizeReport(raw, index) {
     lat,
     lng,
     pet_name: raw.pet_name ?? raw.name ?? 'Sin nombre',
+    pet_name_display: titleText(raw.pet_name ?? raw.name, 'Sin nombre'),
+    species_display: titleText(raw.species),
+    breed_display: titleText(raw.breed),
+    color_display: titleText(raw.color),
     report_type: raw.report_type ?? 'perdido',
     address: raw.address ?? '',
   };
@@ -204,7 +215,7 @@ export default function MapView() {
                         }}>
                           {r.report_type}
                         </div>
-                        <h3 className="display-font" style={{ fontSize: '1.2rem', margin: 0 }}>{r.pet_name}</h3>
+                        <h3 className="display-font" style={{ fontSize: '1.2rem', margin: 0 }}>{r.pet_name_display}</h3>
                       </div>
 
                       {r.photo_url && (
@@ -213,8 +224,8 @@ export default function MapView() {
                         </div>
                       )}
 
-                      <p style={{ margin: '4px 0', fontSize: '0.9rem', fontWeight: 600 }}>{r.species || '-'} � {r.breed || '-'}</p>
-                      <p style={{ margin: '4px 0', fontSize: '0.9rem', color: 'var(--text-muted)' }}>{r.color || '-'} | {r.size || '-'}</p>
+                      <p style={{ margin: '4px 0', fontSize: '0.9rem', fontWeight: 600 }}>{r.species_display} • {r.breed_display}</p>
+                      <p style={{ margin: '4px 0', fontSize: '0.9rem', color: 'var(--text-muted)' }}>{r.color_display} | {titleText(r.size)}</p>
                       {r.address && <p style={{ margin: '6px 0 0', fontSize: '0.85rem' }}>{r.address}</p>}
                     </div>
                   </Popup>
@@ -250,7 +261,7 @@ export default function MapView() {
                 className="brutal-btn"
                 style={{ padding: '8px 10px', fontSize: '0.85rem' }}
               >
-                {r.pet_name} ({r.report_type})
+                {r.pet_name_display} ({r.report_type})
               </button>
             ))}
           </div>
@@ -268,7 +279,6 @@ export default function MapView() {
     </div>
   );
 }
-
 
 
 
