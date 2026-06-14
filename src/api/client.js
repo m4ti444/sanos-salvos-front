@@ -52,6 +52,7 @@ export const matchesAPI = {
   getById: (id) => api.get(`/matches/${id}`),
   getByReport: (reportId) => api.get(`/matches/report/${reportId}`),
   updateStatus: (id, status) => api.patch(`/matches/${id}/status`, { status }),
+  triggerMatch: (reportData) => api.post('/matches/run', reportData),
 };
 
 export const notificationsAPI = {
