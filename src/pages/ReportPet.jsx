@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+ï»¿import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import { PawPrint, MapPin, Camera, Send, ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react';
-import { petsAPI, geoAPI } from '../api/client';
+import { petsAPI, geoAPI, matchesAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { showToast } from '../utils/toast';
 
@@ -153,8 +153,25 @@ export default function ReportPet() {
           latitude: data.latitude,
           longitude: data.longitude,
           address: data.address,
+        });      } catch {}
+
+      try {
+        await matchesAPI.triggerMatch({
+          report_id: res.data.id,
+          report_type: res.data.report_type,
+          pet_name: res.data.pet.name,
+          species: res.data.pet.species,
+          breed: res.data.pet.breed,
+          color: res.data.pet.color,
+          size: res.data.pet.size,
+          latitude: res.data.latitude,
+          longitude: res.data.longitude,
+          date_event: res.data.date_event,
+          user_id: res.data.user_id,
         });
-      } catch {}
+      } catch (err) {
+        console.error("Error triggering match", err);
+      }
 
       setSuccess(true);
     } catch (err) {
@@ -246,7 +263,7 @@ export default function ReportPet() {
                 <div className="input-group">
                   <label>Tamano *</label>
                   <select className="input-field report-input" value={form.pet.size} onChange={(e) => updatePet('size', e.target.value)}>
-                    <option value="pequeño">Pequeño</option>
+                    <option value="pequeï¿½o">Pequeï¿½o</option>
                     <option value="mediano">Mediano</option>
                     <option value="grande">Grande</option>
                   </select>
@@ -347,5 +364,6 @@ export default function ReportPet() {
     </div>
   );
 }
+
 
 
