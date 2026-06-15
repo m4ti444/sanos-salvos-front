@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import { PawPrint, MapPin, Camera, Send, ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react';
@@ -156,7 +156,7 @@ export default function ReportPet() {
         });      } catch {}
 
       try {
-        await matchesAPI.triggerMatch({
+        const matchRes = await matchesAPI.triggerMatch({
           report_id: res.data.id,
           report_type: res.data.report_type,
           pet_name: res.data.pet.name,
@@ -169,6 +169,10 @@ export default function ReportPet() {
           date_event: res.data.date_event,
           user_id: res.data.user_id,
         });
+        if (matchRes.data?.matches_found > 0) {
+          const n = matchRes.data.matches_found;
+          showToast(`Se encontro ${n} posible${n > 1 ? 's' : ''} coincidencia${n > 1 ? 's' : ''}`, 'success');
+        }
       } catch (err) {
         console.error("Error triggering match", err);
       }

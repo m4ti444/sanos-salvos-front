@@ -17,7 +17,7 @@ export default function ToastHost() {
       const timer = setTimeout(() => {
         setToasts((prev) => prev.filter((t) => t.id !== id));
         timers.current.delete(id);
-      }, 2600);
+      }, 4000);
       timers.current.set(id, timer);
     };
 
@@ -44,8 +44,8 @@ export default function ToastHost() {
         <div
           key={toast.id}
           style={{
-            background: toast.type === 'warning' ? 'var(--accent-orange)' : 'white',
-            color: toast.type === 'warning' ? 'white' : 'var(--text-primary)',
+            background: toast.type === 'warning' ? 'var(--accent-orange)' : toast.type === 'success' ? '#10b981' : 'white',
+            color: toast.type === 'warning' || toast.type === 'success' ? 'white' : 'var(--text-primary)',
             border: 'var(--border-thick)',
             boxShadow: '6px 6px 0 var(--text-primary)',
             padding: '14px 16px',

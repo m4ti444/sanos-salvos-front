@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { PawPrint, User, LogOut, Menu, X, Bell, FileText } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { notificationsAPI } from '../../api/client';
 import { showToast } from '../../utils/toast';
@@ -11,28 +11,44 @@ export default function Navbar() {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState(0);
+  const prevCount = useRef(-1);
+  const prevUserId = useRef(null);
 
-  // Reset visual badge while user is on matches page
   useEffect(() => {
     if (location.pathname === '/matches') {
       setNotifications(0);
+      prevCount.current = 0;
     }
   }, [location.pathname]);
 
-  // Poll unread notifications count for current user
   useEffect(() => {
     let cancelled = false;
     let intervalId;
 
+    if (user?.id !== prevUserId.current) {
+      prevCount.current = -1;
+      prevUserId.current = user?.id || null;
+    }
+
     const fetchUnread = async () => {
       if (!user?.id) {
-        if (!cancelled) setNotifications(0);
+        if (!cancelled) {
+          setNotifications(0);
+          prevCount.current = -1;
+        }
         return;
       }
       try {
         const res = await notificationsAPI.getUnreadCount(user.id);
         if (!cancelled && location.pathname !== '/matches') {
-          setNotifications(res.data?.count || 0);
+          const count = res.data?.count || 0;
+          if (prevCount.current === -1 && count > 0) {
+            showToast(`Tienes ${count} coincidencia${count > 1 ? 's' : ''} pendiente${count > 1 ? 's' : ''}`, 'success');
+          } else if (prevCount.current >= 0 && count > prevCount.current) {
+            showToast('Nueva coincidencia encontrada', 'success');
+          }
+          prevCount.current = count;
+          setNotifications(count);
         }
       } catch {
         if (!cancelled) setNotifications(0);
@@ -49,6 +65,8 @@ export default function Navbar() {
   }, [user?.id, location.pathname]);
 
   const handleLogout = () => {
+    prevCount.current = -1;
+    prevUserId.current = null;
     logout();
     navigate('/');
   };
@@ -71,8 +89,6 @@ export default function Navbar() {
       padding: '20px 0'
     }}>
       <div className="container navbar-inner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        
-        {/* Logo */}
         <Link to="/" className="navbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{
             background: 'var(--text-primary)', color: 'var(--bg-primary)',
@@ -85,24 +101,16 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop Menu */}
         <div style={{ display: 'none', gap: '32px', alignItems: 'center' }} className="md-flex">
           <Link to="/" style={{ fontWeight: 700, textTransform: 'uppercase' }}>INICIO</Link>
           <Link to="/map" style={{ fontWeight: 700, textTransform: 'uppercase' }}>MAPA</Link>
         </div>
 
-        {/* Auth Buttons */}
         <div style={{ display: 'none', gap: '16px', alignItems: 'center' }} className="md-flex navbar-auth-wrap">
-          <button
-            onClick={handleMatchesClick}
-            className="nav-icon-btn"
-            title="Coincidencias"
-          >
+          <button onClick={handleMatchesClick} className="nav-icon-btn" title="Coincidencias">
             <Bell size={16} />
             {notifications > 0 && (
-              <span className="nav-icon-badge">
-                {notifications}
-              </span>
+              <span className="nav-icon-badge">{notifications}</span>
             )}
           </button>
           {user ? (
@@ -125,13 +133,11 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Mobile Toggle */}
         <button className="md-hidden brutal-btn" style={{ padding: '8px' }} onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
         <div style={{
           position: 'absolute', top: '100%', left: 0, right: 0,
