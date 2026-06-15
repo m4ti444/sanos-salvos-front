@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react';
 import { Search, CheckCircle, XCircle, Loader } from 'lucide-react';
 import { matchesAPI } from '../api/client';
+import { useAuth } from '../context/AuthContext';
 
 function ScoreBar({ score }) {
   const cls = score >= 70 ? 'score-high' : score >= 40 ? 'score-medium' : 'score-low';
@@ -89,9 +90,13 @@ export default function Matches() {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const { user } = useAuth();
+
   useEffect(() => {
-    matchesAPI.getAll().then(res => setMatches(res.data)).catch(() => {}).finally(() => setLoading(false));
-  }, []);
+    if (user?.id) {
+      matchesAPI.getAll(user.id).then(res => setMatches(res.data)).catch(() => {}).finally(() => setLoading(false));
+    }
+  }, [user?.id]);
 
   const handleAction = async (matchId, status) => {
     try {

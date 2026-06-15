@@ -50,7 +50,7 @@ export const geoAPI = {
 };
 
 export const matchesAPI = {
-  getAll: () => api.get('/matches/'),
+  getAll: (userId) => api.get('/matches/', { params: userId ? { user_id: userId } : {} }),
   getById: (id) => api.get(`/matches/${id}`),
   getByReport: (reportId) => api.get(`/matches/report/${reportId}`),
   updateStatus: (id, status) => api.patch(`/matches/${id}/status`, { status }),
