@@ -14,12 +14,13 @@ const AuthContext = createContext(null);
 
 function mapFirebaseUser(user) {
   if (!user) return null;
+  const storedPhone = localStorage.getItem(`phone_${user.uid}`) || '';
   return {
     id: user.uid,
     email: user.email || '',
     username: user.displayName || (user.email ? user.email.split('@')[0] : ''),
     full_name: user.displayName || '',
-    phone: user.phoneNumber || '',
+    phone: user.phoneNumber || storedPhone,
   };
 }
 
@@ -46,6 +47,9 @@ export function AuthProvider({ children }) {
     const displayName = data.full_name?.trim() || data.username?.trim() || data.email.split('@')[0];
     if (displayName) {
       await updateProfile(res.user, { displayName });
+    }
+    if (data.phone?.trim()) {
+      localStorage.setItem(`phone_${res.user.uid}`, data.phone.trim());
     }
     const refreshedUser = firebaseAuth.currentUser;
     setUser(mapFirebaseUser(refreshedUser));
