@@ -78,8 +78,8 @@ export default function ReportPet() {
         showToast('La descripcion de la mascota es obligatoria.', 'warning');
         return false;
       }
-      if (form.pet.description.trim().length < 10) {
-        showToast('La descripcion debe tener al menos 10 caracteres.', 'warning');
+      if (form.pet.description.trim().length < 5) {
+        showToast('La descripcion debe tener al menos 5 caracteres.', 'warning');
         return false;
       }
       return true;
@@ -269,14 +269,14 @@ export default function ReportPet() {
                 <div className="input-group">
                   <label>Tamano *</label>
                   <select className="input-field report-input" value={form.pet.size} onChange={(e) => updatePet('size', e.target.value)}>
-                    <option value="peque�o">Peque�o</option>
+                    <option value="pequeño">Pequeño</option>
                     <option value="mediano">Mediano</option>
                     <option value="grande">Grande</option>
                   </select>
                 </div>
                 <div className="input-group">
                   <label>Edad aproximada</label>
-                  <input className="input-field report-input" placeholder="Ej: 3 anos, cachorro" value={form.pet.age_estimate} onChange={(e) => updatePet('age_estimate', e.target.value)} />
+                  <input type="number" className="input-field report-input" placeholder="Ej: 3, 5" value={form.pet.age_estimate} onChange={(e) => updatePet('age_estimate', e.target.value)} />
                 </div>
               </div>
 
