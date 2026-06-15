@@ -175,7 +175,9 @@ export default function ReportPet() {
 
       setSuccess(true);
     } catch (err) {
-      showToast(err.response?.data?.detail || 'Error al crear reporte', 'warning');
+      const detail = err.response?.data?.detail;
+      const errorMsg = Array.isArray(detail) ? detail.map(d => d.msg).join(', ') : (typeof detail === 'string' ? detail : 'Error al crear reporte');
+      showToast(errorMsg, 'warning');
     } finally {
       setLoading(false);
     }
